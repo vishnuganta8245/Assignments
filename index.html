@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee CRUD</title>
+    <style>
+        table { border-collapse: collapse; width: 70%; margin: 20px auto; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #f2f2f2; }
+        form { margin: 20px auto; text-align: center; }
+        input { padding: 5px; margin: 5px; }
+        button { padding: 5px 10px; }
+        .delete { background: red; color: white; }
+        .update { background: orange; color: black; }
+    </style>
+</head>
+<body>
+
+<h2 style="text-align:center;">Employee CRUD</h2>
+
+<!-- Add Employee Form -->
+<form action="{{ url_for('add_employee') }}" method="post">
+    <input type="text" name="name" placeholder="Name" required>
+
+    <!-- Role dropdown -->
+    <select name="role" required>
+        <option value="" disabled selected>Select Role</option>
+        <option value="Manager">Manager</option>
+        <option value="Developer">Developer</option>
+        <option value="HR">HR</option>
+        <option value="Analyst">Analyst</option>
+    </select>
+
+    <input type="number" name="salary" placeholder="Salary" required>
+    <button type="submit">Add Employee</button>
+</form>
+
+
+
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Salary</th>
+        <th>Actions</th>
+    </tr>
+   {% for e in employees %} <tr> <form action="{{ url_for('update_employee', emp_id=e.id) }}" method="post"> 
+    <td>{{ e.id }}</td> 
+    <td><input type="text" name="name" value="{{ e.name }}" required></td> 
+    <td><input type="text" name="role" value="{{ e.role }}" required></td>
+     <td><input type="number" name="salary" value="{{ e.salary }}" required></td> 
+     <td> <button class="update" type="submit">Update</button> </form>
+        <form action="{{ url_for('delete_employee', emp_id=e.id) }}" method="post" style="display:inline;"> 
+            <button class="delete" type="submit">Delete</button> 
+        </form> 
+    </td> 
+    </tr> 
+        {% endfor %}
+</table>
+
+</body>
+</html>

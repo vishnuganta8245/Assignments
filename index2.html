@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee CRUD</title>
+<style>
+
+        table { border-collapse: collapse; width: 70%; margin: 20px auto; }
+
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+
+        th { background: #f2f2f2; }
+
+        form { margin: 20px auto; text-align: center; }
+
+        input { padding: 5px; margin: 5px; }
+
+        button { padding: 5px 10px; }
+
+        .delete { background: red; color: white; }
+
+        .update { background: orange; color: black; }
+ 
+        
+
+        #popup { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); }
+
+        .popup-box { background: white; padding: 20px; width: 300px; margin: 100px auto; border-radius: 8px; }
+</style>
+<script>
+
+        function openUpdatePopup(id, name, salary) {
+
+            document.getElementById("update_id").value = id;
+
+            document.getElementById("update_name").value = name;
+
+            document.getElementById("update_salary").value = salary;
+
+            document.getElementById("popup").style.display = "block";
+
+        }
+
+        function closePopup() {
+
+            document.getElementById("popup").style.display = "none";
+
+        }
+</script>
+</head>
+<body>
+ 
+<h2 style="text-align:center;">Employee CRUD</h2>
+ 
+<!-- Add Employee Form (No Role input) -->
+<form action="{{ url_for('add_employee') }}" method="post">
+<input type="text" name="name" placeholder="Name" required>
+<input type="number" name="salary" placeholder="Salary" required>
+<select name="fruit" id="fruit">
+    <option value="">-- Select Fruit --</option>
+ 
+    {% for item in items %}
+        <option value="{{ item }}">{{ item }}</option>
+    {% endfor %}
+</select>
+<button type="submit">Add Employee</button>
+</form>
+ 
+<!-- Employee Table -->
+<table>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Role</th>
+<th>Salary</th>
+<th>Actions</th>
+</tr>
+
+    {% for e in employees %}
+<tr>
+<td>{{ e.id }}</td>
+<td>{{ e.name }}</td>
+<td>{{ e.role }}</td>
+<td>{{ e.salary }}</td>
+<td>
+<button class="update" onclick="openUpdatePopup('{{ e.id }}', '{{ e.name }}', '{{ e.salary }}')">Update</button>
+<form action="{{ url_for('delete_employee', emp_id=e.id) }}" method="post" style="display:inline;">
+<button class="delete" type="submit">Delete</button>
+</form>
+</td>
+</tr>
+
+    {% endfor %}
+</table>
+ 
+<!-- Update Popup Modal -->
+<div id="popup">
+<div class="popup-box">
+<h3>Update Employee</h3>
+<form action="" method="post" id="update_form">
+<input type="hidden" id="update_id" name="id">
+<label>Name:</label><br>
+<input type="text" id="update_name" name="name" required><br><br>
+<label>Salary:</label><br>
+<input type="number" id="update_salary" name="salary" required><br><br>
+<button type="submit">Update</button>
+<button type="button" onclick="closePopup()">Cancel</button>
+</form>
+<script>
+
+            document.getElementById("update_form").onsubmit = function () {
+
+                var id = document.getElementById("update_id").value;
+
+                this.action = "/update/" + id;
+
+            };
+</script>
+</div>
+</div>
+ 
+</body>
+</html>
+
+ 

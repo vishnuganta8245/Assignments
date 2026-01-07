@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Employee CRUD</title>
+
+<style>
+    table { border-collapse: collapse; width: 70%; margin: 20px auto; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #f2f2f2; }
+    form { margin: 20px auto; text-align: center; }
+    input, select { padding: 5px; margin: 5px; }
+    button { padding: 5px 10px; }
+    .delete { background: red; color: white; }
+    .update { background: orange; color: black; }
+</style>
+
+</head>
+
+<body>
+
+<h2 style="text-align:center;">Employee CRUD</h2>
+
+<!-- Add Role Form -->
+<form action="{{ url_for('add_role') }}" method="post">
+    <input type="text" name="role_name" placeholder="New Role Name" required>
+    <button type="submit">Add Role</button>
+</form>
+
+<!-- Add Employee Form -->
+<form action="{{ url_for('add_employee') }}" method="post">
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="number" name="salary" placeholder="Salary" required>
+
+    <select name="role" required>
+        <option value="">-- Select Role --</option>
+        {% for role in roles %}
+            <option value="{{ role.role_name }}">{{ role.role_name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Add Employee</button>
+</form>
+
+
+<!-- Employee Table -->
+<table>
+<tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Role</th>
+    <th>Salary</th>
+    <th>Actions</th>
+</tr>
+
+{% for e in employees %}
+<tr>
+    <td>{{ e.id }}</td>
+    <td>{{ e.name }}</td>
+    <td>{{ e.role }}</td>
+    <td>{{ e.salary }}</td>
+    <td>
+
+        
+        <a href="{{ url_for('edit_employee', emp_id=e.id) }}">
+            <button class="update" type="button">Update</button>
+        </a>
+
+        <form action="{{ url_for('delete_employee', emp_id=e.id) }}" method="post" style="display:inline;">
+            <button class="delete" type="submit">Delete</button>
+        </form>
+
+    </td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
